@@ -16,8 +16,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+// serve static conent
+app.use(express.static('./public'));
+
 // Route
-app.use('/', (req, res) => {
+app.use('/api/post', (req, res) => {
   return res.send('Hello');
 });
 
