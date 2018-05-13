@@ -1,0 +1,23 @@
+{
+  "name": "node-ts-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && jest --watch ./dist",
+    "compile": "tsc && node ./dist/index.js",
+    "start": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^21.1.8",
+    "@types/node": "^9.3.0",
+    "jest": "^21.2.1",
+    "nodemon": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}
