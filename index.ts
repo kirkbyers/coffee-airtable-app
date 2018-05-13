@@ -1,8 +1,19 @@
+import * as airtable from 'airtable';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as morgan from 'morgan';
 
 const app = express();
+
+// check for $AIRTABLE_API_KEY
+if (!process.env.AIRTABLE_API_KEY) {
+  console.warn('No $AIRTABLE_API_KEY set');
+}
+
+// check for $AIRTABLE_BASE
+if (!process.env.AIRTABLE_BASE) {
+  console.warn('No $AIRTABLE_BASE set');
+}
 
 // logging
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -19,9 +30,19 @@ app.use(bodyParser.json());
 // serve static conent
 app.use(express.static('./public'));
 
+// Airtable config
+const airBase = new airtable({ apiKey: process.env.AIRTABLE_API_KEY })
+  .base(process.env.AIRTABLE_BASE);
+
 // Route
-app.use('/api/post', (req, res) => {
-  return res.send('Hello');
+app.use('/api/record', (req, res) => {
+  airBase('Table 1').create(req.body, { typecast: true }, (err: any, record: any) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    res.send(record.getId());
+  });
 });
 
 // Listen
