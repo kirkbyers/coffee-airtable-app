@@ -15,6 +15,11 @@ if (!process.env.AIRTABLE_BASE) {
   console.warn('No $AIRTABLE_BASE set');
 }
 
+// check for $AIRBASE_TABLE
+if (!process.env.AIRTABLE_TABLE) {
+  console.warn('NO $AIRBASE_TABLE set');
+}
+
 // logging
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   // Set dev-mode express options
@@ -34,14 +39,28 @@ app.use(express.static('./public'));
 const airBase = new airtable({ apiKey: process.env.AIRTABLE_API_KEY })
   .base(process.env.AIRTABLE_BASE);
 
+const serverHTMLRes = (message: string) => `
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+</head>
+<body>
+  <div class="container">
+    ${message}
+    </div>
+  <body/>
+</html>
+`;
+
 // Route
 app.use('/api/record', (req, res) => {
-  airBase('Table 1').create(req.body, { typecast: true }, (err: any, record: any) => {
+  airBase(process.env.AIRTABLE_TABLE).create(req.body, { typecast: true }, (err: any, record: any) => {
     if (err) {
       console.error(err);
-      return;
+      res.status(500);
+      return res.send(serverHTMLRes('Airtable is not available at this time. <a href="/">Start over</a>'));
     }
-    res.send(record.getId());
+    return res.send(serverHTMLRes(`Thanks for submitting a reading! <a href="/">Start over</a>`));
   });
 });
 
