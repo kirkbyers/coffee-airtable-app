@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && jest --watch ./dist",
-    "compile": "tsc && node ./dist/index.js",
+    "compile": "tsc && cp -r ./public ./dist",
+    "dist": "npm run compile && node ./dist/index.js",
     "start": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\""
   },
   "keywords": [],
